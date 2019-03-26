@@ -39,7 +39,14 @@ class Abbreviations(object):
 class Textatistic(object):
     """Object containing every text statistic and readability score."""
     
-    def __init__(self, text, abbr=Abbreviations(), hyphen=Hyphenator('en_US'), easy=EasyWords()):
+    def __init__(self, text, abbr=None, hyphen=None, easy=None):
+
+        if not abbr:
+            abbr = Abbreviations()
+        if not hyphen:
+            hyphen = Hyphenator('en_US')
+        if not easy:
+            easy = EasyWords()
             
         text = punct_clean(text, abbr)
         self.sent_count = sent_count(text, abbr, True)
@@ -84,13 +91,16 @@ class Textatistic(object):
 
 # Prepare text.
 
-def punct_clean(text, abbr=Abbreviations()):
+def punct_clean(text, abbr=None):
     """ 1. Replace em, en, etc. dashes with hyphens.
         2. Remove hyphens in hyphenated single words, e.g., co-author.
         3. Remove decimals and replace with a plus sign (+).
         4. Remove punctuation used in an obvious mid-sentence rhetorical manner.
         5. Replace abbreviations with their full text per abbr keyword.
     """
+
+    if not abbr:
+        abbr = Abbreviations()
     
     # Replace em, en, etc. dashes with hyphens.
     text = text.replace("–", "-")
@@ -116,8 +126,10 @@ def punct_clean(text, abbr=Abbreviations()):
     return text
 
 
-def word_array(text, abbr=Abbreviations(), prepped=False):
+def word_array(text, abbr=None, prepped=False):
     """Generate list of words."""
+    if not abbr:
+        abbr = Abbreviations()
     if not prepped:
         text = punct_clean(text, abbr)
     return text.replace("-", ' ').translate(str.maketrans("", "", string.punctuation)).split()
@@ -125,15 +137,21 @@ def word_array(text, abbr=Abbreviations(), prepped=False):
 
 # Calculate text statistics.
 
-def char_count(text, abbr=Abbreviations(), prepped=False):
+def char_count(text, abbr=None, prepped=False):
     """Count number of non-space characters."""
+    if not abbr:
+        abbr = Abbreviations()
     if not prepped:
         text = punct_clean(text, abbr)
     return len(''.join(text.split()))
 
 
-def notdalechall_count(text, abbr=Abbreviations(), easy=EasyWords(), prepped=False):
+def notdalechall_count(text, abbr=None, easy=None, prepped=False):
     """Count number of words not on Dale-Chall list."""
+    if not abbr:
+        abbr = Abbreviations()
+    if not easy:
+        easy = EasyWords()
     if not prepped:
         text = word_array(text, abbr)
     difficult = 0
@@ -149,18 +167,24 @@ def notdalechall_count(text, abbr=Abbreviations(), easy=EasyWords(), prepped=Fal
     return difficult
 
 
-def sent_count(text, abbr=Abbreviations(), prepped=False):
+def sent_count(text, abbr=None, prepped=False):
     """Count number of sentences."""
+    if not abbr:
+        abbr = Abbreviations()
     if not prepped:
         text = punct_clean(text, abbr)
     return text.count('.') + text.count('!') + text.count('?')
 
 
-def sybl_counts(text, abbr=Abbreviations(), hyphen=Hyphenator('en_US'), prepped=False):
+def sybl_counts(text, abbr=None, hyphen=None, prepped=False):
     """Count number of syllables in text, return in sybl_count;
     count number of words with three or more syllables, return
     in polysyblword_count.
     """
+    if not abbr:
+        abbr = Abbreviations()
+    if not hyphen:
+        hyphen = Hyphenator('en_US')
     if not prepped:
         text = word_array(text, abbr)
     sybl_count = 0
@@ -172,8 +196,10 @@ def sybl_counts(text, abbr=Abbreviations(), hyphen=Hyphenator('en_US'), prepped=
     return {'sybl_count': sybl_count, 'polysyblword_count': polysyblword_count}
 
 
-def word_count(text, abbr=Abbreviations(), prepped=False):
+def word_count(text, abbr=None, prepped=False):
     """Count number of words."""
+    if not abbr:
+        abbr = Abbreviations()
     if not prepped:
         text = word_array(text, abbr)
     return len(text)
