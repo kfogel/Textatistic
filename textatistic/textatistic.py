@@ -12,7 +12,7 @@ class EasyWords(object):
     """Object containing Dale-Chall list of easy words."""
     
     def __init__(self, file=None):
-        if not file:
+        if file is None:
             file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dale_chall.txt')
         self.list = open(file, 'r').read().splitlines()
 
@@ -21,7 +21,7 @@ class Abbreviations(object):
     """Object containing abbreviations & their replacements."""
     
     def __init__(self, file=None, append=None, modify=None, remove=None):
-        if not file:
+        if file is None:
             file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'abbreviations.txt')
         with open(file, 'r') as fh:
             self.list = list(csv.reader(fh))
@@ -41,11 +41,11 @@ class Textatistic(object):
     
     def __init__(self, text, abbr=None, hyphen=None, easy=None):
 
-        if not abbr:
+        if abbr is None:
             abbr = Abbreviations()
-        if not hyphen:
+        if hyphen is None:
             hyphen = Hyphenator('en_US')
-        if not easy:
+        if easy is None:
             easy = EasyWords()
             
         text = punct_clean(text, abbr)
@@ -99,7 +99,7 @@ def punct_clean(text, abbr=None):
         5. Replace abbreviations with their full text per abbr keyword.
     """
 
-    if not abbr:
+    if abbr is None:
         abbr = Abbreviations()
     
     # Replace em, en, etc. dashes with hyphens.
@@ -128,7 +128,7 @@ def punct_clean(text, abbr=None):
 
 def word_array(text, abbr=None, prepped=False):
     """Generate list of words."""
-    if not abbr:
+    if abbr is None:
         abbr = Abbreviations()
     if not prepped:
         text = punct_clean(text, abbr)
@@ -139,7 +139,7 @@ def word_array(text, abbr=None, prepped=False):
 
 def char_count(text, abbr=None, prepped=False):
     """Count number of non-space characters."""
-    if not abbr:
+    if abbr is None:
         abbr = Abbreviations()
     if not prepped:
         text = punct_clean(text, abbr)
@@ -148,9 +148,9 @@ def char_count(text, abbr=None, prepped=False):
 
 def notdalechall_count(text, abbr=None, easy=None, prepped=False):
     """Count number of words not on Dale-Chall list."""
-    if not abbr:
+    if abbr is None:
         abbr = Abbreviations()
-    if not easy:
+    if easy is None:
         easy = EasyWords()
     if not prepped:
         text = word_array(text, abbr)
@@ -169,7 +169,7 @@ def notdalechall_count(text, abbr=None, easy=None, prepped=False):
 
 def sent_count(text, abbr=None, prepped=False):
     """Count number of sentences."""
-    if not abbr:
+    if abbr is None:
         abbr = Abbreviations()
     if not prepped:
         text = punct_clean(text, abbr)
@@ -181,9 +181,9 @@ def sybl_counts(text, abbr=None, hyphen=None, prepped=False):
     count number of words with three or more syllables, return
     in polysyblword_count.
     """
-    if not abbr:
+    if abbr is None:
         abbr = Abbreviations()
-    if not hyphen:
+    if hyphen is None:
         hyphen = Hyphenator('en_US')
     if not prepped:
         text = word_array(text, abbr)
@@ -198,7 +198,7 @@ def sybl_counts(text, abbr=None, hyphen=None, prepped=False):
 
 def word_count(text, abbr=None, prepped=False):
     """Count number of words."""
-    if not abbr:
+    if abbr is None:
         abbr = Abbreviations()
     if not prepped:
         text = word_array(text, abbr)
@@ -210,9 +210,9 @@ def word_count(text, abbr=None, prepped=False):
 def dalechall_score(text=None, abbr=None, easy=None, vars={}):
     """Calculate Dale-Chall score."""
     if text:
-        if not abbr:
+        if abbr is None:
             abbr = Abbreviations()
-        if not easy:
+        if easy is None:
             easy = EasyWords()
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
@@ -229,9 +229,9 @@ def dalechall_score(text=None, abbr=None, easy=None, vars={}):
 def flesch_score(text=None, abbr=None, hyphen=None, vars={}):
     """Calculate Flesch Reading Ease score."""
     if text:
-        if not abbr:
+        if abbr is None:
             abbr = Abbreviations()
-        if not hyphen:
+        if hyphen is None:
             hyphen = Hyphenator('en_US')
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
@@ -244,9 +244,9 @@ def flesch_score(text=None, abbr=None, hyphen=None, vars={}):
 def fleschkincaid_score(text=None, abbr=None, hyphen=None, vars={}):
     """Calculate Flesch-Kincaid score."""
     if text:
-        if not abbr:
+        if abbr is None:
             abbr = Abbreviations()
-        if not hyphen:
+        if hyphen is None:
             hyphen = Hyphenator('en_US')
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
@@ -259,9 +259,9 @@ def fleschkincaid_score(text=None, abbr=None, hyphen=None, vars={}):
 def gunningfog_score(text=None, abbr=None, hyphen=None, vars={}):
     """Calculate Gunning Fog score."""
     if text:
-        if not abbr:
+        if abbr is None:
             abbr = Abbreviations()
-        if not hyphen:
+        if hyphen is None:
             hyphen = Hyphenator('en_US')
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
@@ -274,9 +274,9 @@ def gunningfog_score(text=None, abbr=None, hyphen=None, vars={}):
 def smog_score(text=None, abbr=None, hyphen=None, vars={}):
     """Calculate SMOG score."""
     if text:
-        if not abbr:
+        if abbr is None:
             abbr = Abbreviations()
-        if not hyphen:
+        if hyphen is None:
             hyphen = Hyphenator('en_US')
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
